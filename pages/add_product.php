@@ -1,13 +1,16 @@
 <?php
 include("../classes/database.php");
-include("../classes/user_management.php");
+include("../classes/product_management.php");
 
-if(isset($_POST['signin'])){
-  $email=$_POST['email'];
-  $pass=$_POST['password'];
-  $signInUser=new User($email,$pass);
-  $signInUser->SignIn();
+if(isset($_POST['create_product'])){
+    $image_name=$_FILES['product_image']['name'];
+    $image_tmp=$_FILES['product_image']['tmp_name'];
+    $name=$_POST['name'];
+    $description=$_POST['description'];
+    $price=$_POST['price'];
 
+        $signup=new ProductManager($name,$description,$price,$image_name,$image_tmp);
+        $signup->createProduct();
 }
 
 
@@ -44,7 +47,7 @@ if(isset($_POST['signin'])){
                 <div class="card-body">
                   <div class="form-group">
                     <label >Product name</label>
-                    <input type="email" name="name" class="form-control" placeholder="Enter product name">
+                    <input type="text" name="name" class="form-control" placeholder="Enter product name">
                   </div>
                   <div class="form-group mt-2">
                     <label>Product Description</label>

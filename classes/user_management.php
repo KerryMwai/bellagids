@@ -6,7 +6,7 @@ class User extends Database{
     {
         // $this->image_name=$image_name;
         // $this->image_tmp=$image_tmp;
-        $this->full_name=$full_name;
+        // $this->full_name=$full_name;
         $this->user_email=$user_email;
         $this->pass=$pass;
     }
