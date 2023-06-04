@@ -9,8 +9,8 @@ if(isset($_POST['create_product'])){
     $description=$_POST['description'];
     $price=$_POST['price'];
 
-        $signup=new ProductManager($name,$description,$price,$image_name,$image_tmp);
-        $signup->createProduct();
+        $createProduct=new ProductManager($name,$description,$price,$image_name,$image_tmp);
+        $createProduct->createProduct();
 }
 
 
@@ -43,7 +43,7 @@ if(isset($_POST['create_product'])){
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form method="POST">
+              <form method="POST"  enctype="multipart/form-data">
                 <div class="card-body">
                   <div class="form-group">
                     <label >Product name</label>

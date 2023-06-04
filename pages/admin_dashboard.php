@@ -47,7 +47,7 @@ session_start();
             <ul class="d-flex">
                 <li class="nav-item">
                 
-                    <a class="nav-link active text-white" aria-current="page" href="./pages/manage_page.php"><i class="fa-solid fa-cart-plus"></i><span class="p-2">Manage Products</span></a>
+                    <a class="nav-link active text-white" aria-current="page" href="./add_product.php"><i class="fa-solid fa-cart-plus"></i><span class="p-2">Manage Products</span></a>
                   </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -60,7 +60,7 @@ session_start();
                         </span>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                      <li><a class="dropdown-item" href="./pages/signout.php"><i class="fa-solid fa-right-to-bracket"></i> <span class="p-2">Logout</span></a></li>
+                      <li><a class="dropdown-item" href="signout.php"><i class="fa-solid fa-right-to-bracket"></i> <span class="p-2">Logout</span></a></li>
                     </ul>
                   </li>
             </ul>
