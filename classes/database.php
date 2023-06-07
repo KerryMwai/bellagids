@@ -13,8 +13,10 @@ class Database{
                 $this->dbname="bellagids";
 
                 $dsn="mysql:host=".$this->servername.";dbname=".$this->dbname;
+                $databaseFile = '/home/kerry/Desktop/bellagids.db';
                 try{
                     $pdo=new PDO($dsn,$this->username,$this->password);
+                    // $pdo = new PDO('sqlite:' . $databaseFile);
                     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
                     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                     return $pdo;

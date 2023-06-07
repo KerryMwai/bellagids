@@ -6,7 +6,7 @@ if(isset($_POST['create_user'])){
     $pass1=$_POST['pass1'];
 
         $signup=new User($email,$pass1);
-        $signup->SignUpUser();
+        $signup->createCategory();
 }
 ?>
 

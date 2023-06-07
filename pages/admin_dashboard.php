@@ -47,7 +47,7 @@ session_start();
             <ul class="d-flex">
                 <li class="nav-item">
                 
-                    <a class="nav-link active text-white" aria-current="page" href="./add_product.php"><i class="fa-solid fa-cart-plus"></i><span class="p-2">Manage Products</span></a>
+                    <a class="nav-link active text-white" aria-current="page" href="product_plus.php"><i class="fa-solid fa-cart-plus"></i><span class="p-2">Manage Products</span></a>
                   </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
