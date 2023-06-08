@@ -130,21 +130,75 @@ class ProductManager extends Database{
         $row=$stmt->fetch();
         if($row){
 
-                // $sql0="SELECT * FROM cart WHERE client_id=? AND product_id=?";
-                // $stmt0=$this->Connect()->prepare($sql0);
-                // $stmt0=$stmt0->execute([$user_id,$product_id]);
-                // $row0=$stmt0->fetch();
-                // if($row0){
-                //     echo "True";
-                // }
+                $sql0="SELECT * FROM cart WHERE client_id=? AND product_id=?";
+                $stmt0=$this->Connect()->prepare($sql0);
+                $stmt0->execute([$user_id,$product_id]);
+                $row0=$stmt0->fetch();
+                if($row0){
+                    return;
+                }else{
            
-                $sql1="INSERT INTO cart(client_id, product_id)VALUES(?,?)";
+                $sql1="INSERT INTO cart(client_id, product_id,item_count, item_total_amount)VALUES(?,?,?,?)";
                 $stmt1=$this->Connect()->prepare($sql1);
-                $stmt1->execute([$user_id,$product_id]);
+                $stmt1->execute([$user_id,$product_id,1,$row['product_price']]);
                 echo "Added to cart successfully";
-                
+            }
+       
         }
     }
+
+    public function incrementItemCountOnCart($user_id,$product_id)
+    {
+         $sql="SELECT * FROM cart WHERE client_id=? AND product_id=?";
+         $stmt=$this->Connect()->prepare($sql);
+         $stmt->execute([$user_id, $product_id]);
+         $row=$stmt->fetch();
+         if($row){
+            if($row['item_count']==500){
+             return;
+            }else{
+             $increased=$row['item_count']+1;
+             
+             $sql1="SELECT * FROM products WHERE id=?";
+             $stmt1=$this->Connect()->prepare($sql1);
+             $stmt1->execute([$product_id]);
+             $row1=$stmt1->fetch();
+             if($row1){
+                 $total=$increased*$row1['product_price'];
+                 $sql0="UPDATE cart SET item_count=?, item_total_amount=? WHERE client_id=? AND product_id=?";
+                 $stmt0=$this->Connect()->prepare($sql0);
+                 $stmt0->execute([$increased,$total,$user_id,$product_id]);
+             }
+            }
+         }
+    }
+
+
+   public function decrementItemCountOnCart($user_id,$product_id)
+   {
+        $sql="SELECT * FROM cart WHERE client_id=? AND product_id=?";
+        $stmt=$this->Connect()->prepare($sql);
+        $stmt->execute([$user_id, $product_id]);
+        $row=$stmt->fetch();
+        if($row){
+           if($row['item_count']==1){
+            return;
+           }else{
+            $increased=$row['item_count']-1;
+            
+            $sql1="SELECT * FROM products WHERE id=?";
+            $stmt1=$this->Connect()->prepare($sql1);
+            $stmt1->execute([$product_id]);
+            $row1=$stmt1->fetch();
+            if($row1){
+                $total=$increased*$row1['product_price'];
+                $sql0="UPDATE cart SET item_count=?, item_total_amount=? WHERE client_id=? AND product_id=?";
+                $stmt0=$this->Connect()->prepare($sql0);
+                $stmt0->execute([$increased,$total,$user_id,$product_id]);
+            }
+           }
+        }
+   }
 
     public function fetchUsersProductToDisplayOnCart($client_id)
     {
@@ -153,9 +207,11 @@ class ProductManager extends Database{
         $stmt->execute([$client_id]);
         $rows=$stmt->fetchAll();
         $total=0;
+        $total_amount=0;
         if($rows){
             echo  "<div class='card-body'>";
             foreach($rows as $row){
+                $total_amount+=$row['item_total_amount'];
                 $sql1="SELECT * FROM products WHERE id=?";
                 $stmt1=$this->Connect()->prepare($sql1);
                 $stmt1->execute([$row['product_id']]);
@@ -165,23 +221,26 @@ class ProductManager extends Database{
                    if($_SESSION['id']==$row['client_id']){
                     echo "
                         <div class='row mb-3'>
-                            <div class='col-3'>
+                            <div class='col-2'>
                                 <img width='60' height='60' src='$row1[product_image]' alt='Product image' class='mb-2'>
                                 <h6>$row1[product_name]</h6>
                             </div>
-                            <div class='col-3'>
+                            <div class='col-2'>
                                 <p>$row1[product_description]</p>
                             </div>
-                            <div class='col-3'>
-                                <p><span class='text-black text-bold'>Price: </span><span>Ksh. $row1[product_price]</span></p>
+                            <div class='col-2'>
+                                <p><span class='text-black text-bold'>Price: </span><span>Ksh. $row[item_total_amount]</span></p>
                             </div>
-                            <div class='col-3'>
-                                <button class='btn btn-outline-success'><span style='font-size:20px'>+</span></button>
-                                <span class='mx-2' style='font-size:20; font-weight:bold'>1</span>
-                                
-                                <button class='btn btn-outline-danger' > <span style='font-size:20px'>-</span> </button>
+                            <div class='col-6 justify-content-end'>
+                                <a href='decrement.php?id=$row[product_id]' class='btn btn-outline-danger'><span style='font-size:20px'>-</span></a>
 
-                                <a href='delete_from_cart.php?id=$row[id]' class='btn btn-outline-danger ml-3 btn-sm' > Remove </a>
+                                
+                                <span class='mx-2' style='font-size:20; font-weight:bold'>$row[item_count]</span>
+
+                                <a href='increment.php?id=$row[product_id]' class='btn btn-outline-success'><span style='font-size:20px'>+</span></a>
+                                
+
+                                <a href='delete_from_cart.php?id=$row[id]' class='btn btn-outline-danger btn-sm mx-4' > Remove </a>
                             </div>
                         </div>
                     
@@ -197,17 +256,19 @@ class ProductManager extends Database{
             </div>
             <div class='card-footer'>
                 <div class='row d-flex'>
-                   <div class='col-8'>
-                    <a href='#' class='btn btn-outline-success'>Buy now</a>
-                   </div>
-                   <div class='col-4 justify-content-end'>
-                        <span class='ml-4'>Total</span>
-                        <span >Ksh. $total</span>
-                   </div>
+                <div class='col-8 justify-content-end'>
+                    <span class='ml-4'>Total</span>
+                    <span >Ksh. $total_amount</span>
+                </div>
+                <div class='col-4'>
+                    <a href='buy_now.php' class='btn btn-outline-success'>Buy now</a>
+                </div>
+                  
                 </div>
                 
             </div>
             ";
+           
         }
 
     }
