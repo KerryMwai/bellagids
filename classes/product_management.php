@@ -1,13 +1,102 @@
 <?php
 class ProductManager extends Database{
-    public function getAllProducts()
+    public function getAllProductsTodisplayForAdmin()
     {
         $sql="SELECT * FROM products";
         $stmt=$this->Connect()->prepare($sql);
         $stmt->execute();
         $rows=$stmt->fetchAll();
         foreach($rows as $row){
-            echo $row['product_name'];
+           echo "
+            <div class='col-lg-4 col-md-6 col-sm-12'>
+                <div class='card m-sm-2 m-xsm-2'>
+                <div class='card-header bg-dark'>
+                    <h3 class='text-white'>$row[product_name]</h3>
+                    <p class='text-white'><span class='text-warning'>Price </span>  KES $row[product_price]/=</p>
+                </div>
+                <div class='card-body bg-secondary'>
+                    <img class='img-fluid' src='$row[product_image]' alt=''>
+                </div>
+                <div class='card-footer bg-dark'>
+                    <div class='row d-flex'>
+                        <div class='col-8'>
+                            <a href='edit_product.php?id=$row[id]' class='btn  btn-success'>Edit</a>
+                        </div>
+                        <div class='col-4 '>
+                            <a href='delete_product.php?id=$row[id]' class='btn btn-danger float-right'>Delete</a>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+           ";
+        }
+    }
+
+    public function getAllProductsTodisplayForUsers()
+    {
+        $sql="SELECT * FROM products";
+        $stmt=$this->Connect()->prepare($sql);
+        $stmt->execute();
+        $rows=$stmt->fetchAll();
+        foreach($rows as $row){
+            echo "
+            <div class='col-lg-4 col-md-6 col-sm-12'>
+                <div class='card m-sm-2 m-xsm-2'>
+                <div class='card-header bg-dark'>
+                    <h3 class='text-white'>$row[product_name]</h3>
+                    <p class='text-white'><span class='text-warning'>Price </span>  KES $row[product_price]/=</p>
+                </div>
+                <div class='card-body bg-secondary'>
+                    <img class='img-fluid' src='$row[product_image]' alt=''>
+                </div>
+                <div class='card-footer bg-dark'>
+                    <div class='row d-flex'>
+                        <div class='col-6'>
+                            <a href='add_to_cart.php?id=$row[id]' class='text-decoration-none text-warning'><h6>Add to cart</h6></a>
+                        </div>
+                        <div class='col-6'>
+                            <a href='#' class='text-decoration-none text-primary'><h6>See More>></h6></a>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+           ";
+        }
+    }
+
+
+    public function getAllProductsTodisplayForUsersForIndexPage()
+    {
+        $sql="SELECT * FROM products";
+        $stmt=$this->Connect()->prepare($sql);
+        $stmt->execute();
+        $rows=$stmt->fetchAll();
+        foreach($rows as $row){
+            echo "
+            <div class='col-lg-4 col-md-6 col-sm-12'>
+                <div class='card m-sm-2 m-xsm-2'>
+                <div class='card-header bg-dark'>
+                    <h3 class='text-white'>$row[product_name]</h3>
+                    <p class='text-white'><span class='text-warning'>Price </span>  KES $row[product_price]/=</p>
+                </div>
+                <div class='card-body bg-secondary'>
+                    <img class='img-fluid' src='$row[path2]' alt=''>
+                </div>
+                <div class='card-footer bg-dark'>
+                    <div class='row d-flex'>
+                        <div class='col-6'>
+                            <a href='./pages/signin.php' class='text-decoration-none text-warning'><h6>Buy Now</h6></a>
+                        </div>
+                        <div class='col-6'>
+                            <a href='#' class='text-decoration-none text-primary'><h6>See More>></h6></a>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+           ";
         }
     }
 
@@ -25,10 +114,209 @@ class ProductManager extends Database{
         $tm=md5(time());
         $dstenation1="../images/".$tm.$image_name;
         $dstenation2="../images/".$tm.$image_name;
+        $dstenation3="./images/".$tm.$image_name;
         move_uploaded_file($image_tmp, $dstenation2);
-        $sql="INSERT INTO products(product_name,product_description,product_image,product_price) VALUES(?,?,?,?)";
+        $sql="INSERT INTO products(product_name,product_description,product_image,product_price,path2, category) VALUES(?,?,?,?,?,?)";
         $stmt=$this->Connect()->prepare($sql);
-        $stmt->execute([$name,$desc,$dstenation1,$price]);
+        $stmt->execute([$name,$desc,$dstenation1,$price,$dstenation3,"General"]);
+    }
+
+
+    public function addTocart($user_id,$product_id)
+    {
+        $sql="SELECT * FROM products WHERE id=?";
+        $stmt=$this->Connect()->prepare($sql);
+        $stmt->execute([$product_id]);
+        $row=$stmt->fetch();
+        if($row){
+
+                // $sql0="SELECT * FROM cart WHERE client_id=? AND product_id=?";
+                // $stmt0=$this->Connect()->prepare($sql0);
+                // $stmt0=$stmt0->execute([$user_id,$product_id]);
+                // $row0=$stmt0->fetch();
+                // if($row0){
+                //     echo "True";
+                // }
+           
+                $sql1="INSERT INTO cart(client_id, product_id)VALUES(?,?)";
+                $stmt1=$this->Connect()->prepare($sql1);
+                $stmt1->execute([$user_id,$product_id]);
+                echo "Added to cart successfully";
+                
+        }
+    }
+
+    public function fetchUsersProductToDisplayOnCart($client_id)
+    {
+        $sql="SELECT * FROM cart WHERE client_id=?";
+        $stmt=$this->Connect()->prepare($sql);
+        $stmt->execute([$client_id]);
+        $rows=$stmt->fetchAll();
+        $total=0;
+        if($rows){
+            echo  "<div class='card-body'>";
+            foreach($rows as $row){
+                $sql1="SELECT * FROM products WHERE id=?";
+                $stmt1=$this->Connect()->prepare($sql1);
+                $stmt1->execute([$row['product_id']]);
+                $row1=$stmt1->fetch();
+                if($row1){
+                    $total+=$row1['product_price'];
+                   if($_SESSION['id']==$row['client_id']){
+                    echo "
+                        <div class='row mb-3'>
+                            <div class='col-3'>
+                                <img width='60' height='60' src='$row1[product_image]' alt='Product image' class='mb-2'>
+                                <h6>$row1[product_name]</h6>
+                            </div>
+                            <div class='col-3'>
+                                <p>$row1[product_description]</p>
+                            </div>
+                            <div class='col-3'>
+                                <p><span class='text-black text-bold'>Price: </span><span>Ksh. $row1[product_price]</span></p>
+                            </div>
+                            <div class='col-3'>
+                                <button class='btn btn-outline-success'><span style='font-size:20px'>+</span></button>
+                                <span class='mx-2' style='font-size:20; font-weight:bold'>1</span>
+                                
+                                <button class='btn btn-outline-danger' > <span style='font-size:20px'>-</span> </button>
+
+                                <a href='delete_from_cart.php?id=$row[id]' class='btn btn-outline-danger ml-3 btn-sm' > Remove </a>
+                            </div>
+                        </div>
+                    
+                        ";
+                   }else{
+                        echo "An Error occured";
+                   }
+
+                  
+                }
+            }
+            echo "
+            </div>
+            <div class='card-footer'>
+                <div class='row d-flex'>
+                   <div class='col-8'>
+                    <a href='#' class='btn btn-outline-success'>Buy now</a>
+                   </div>
+                   <div class='col-4 justify-content-end'>
+                        <span class='ml-4'>Total</span>
+                        <span >Ksh. $total</span>
+                   </div>
+                </div>
+                
+            </div>
+            ";
+        }
+
+    }
+
+
+    public function getProductToUpdate($id)
+    {
+        $sql="SELECT * FROM products WHERE id=?";
+        $stmt=$this->Connect()->prepare($sql);
+        $stmt->execute([$id]);
+        $row=$stmt->fetch();
+        if($row){
+          echo"
+            <form method='POST' enctype='multipart/form-data'>
+                <div class='card-body'>
+                    <div class='form-group'>
+                    <label for='productName'>Product name</label>
+                    <input type='text' value='$row[product_name]' name='name' class='form-control mt-3' id='productName' placeholder='Enter product name'>
+                    </div>
+                    <div class='form-group'>
+                    <label for='productName'>Product description</label>
+                    <input type='text' value='$row[product_description]' name='description' class='form-control mt-3' id='description' placeholder='Enter product description'>
+                    </div>
+                    <div class='form-group'>
+                    <label for='productName'>Product price</label>
+                    <input type='number' value='$row[product_price]' name='price' class='form-control mt-3' id='price' placeholder='Enter product price'>
+                    </div>
+                    <div class='form-group'>
+                    <label for='productName'>Product image</label>
+                    <input type='file' name='image' class='form-control mt-3'>
+                    </div>
+                
+                </div>
+                <!-- /.card-body -->
+
+                <div class='card-footer'>
+                    <button type='submit' name='update' class='btn btn-primary'>Update Product</button>
+                </div>
+            </form>
+          ";
+        }
+    }
+
+
+    public function updateProduct($id,$name,$desc,$price,$img_name,$img_tmp)
+    {
+        $sql1="SELECT *FROM products WHERE id=?";
+        $stmt1=$this->Connect()->prepare($sql1);
+        $stmt1->execute([$id]);
+        $row=$stmt1->fetch();
+        if($row){
+            $path2=$row['path2'];
+            $pro_image=$row['product_image'];
+            if($image_name=='' || $image_tmp==''){
+                $sql2="UPDATE products SET (product_name=?, product_description=?,product_image?,product_price=?,path2=?) WHERE id=?";
+                $stmt2=$this->Connect()->prepare($sql2);
+                $stmt2->execute([$name,$desc,$pro_image,$price,$path2,$id]);
+            }else{
+                if (file_exists($row['product_image'])) {
+                    if (unlink($row['product_image'])) {
+                        $sql3="DELETE FROM products WHERE id=?";
+                        $stmt=$this->Connect()->prepare($sql3);
+                        $stmt->execute([$id]);
+                    } 
+
+                $tm=md5(time());
+                $dstenation1="../images/".$tm.$img_name;
+                $dstenation2="../images/".$tm.$img_name;
+                $dstenation3="./images/".$tm.$img_name;
+                move_uploaded_file($img_tmp, $dstenation2);
+
+                $sql4="UPDATE products SET (product_name=?, product_description=?,product_image?,product_price=?,path2=?) WHERE id=?";
+                $stmt4=$this->Connect()->prepare($sql2);
+                $stmt4->execute([$name,$desc,$dstenation1,$price,$dstenation3,$id]);
+            }
+        }
+    }
+}
+
+    public function deleteProduct($id)
+    {
+        $sql="SELECT * FROM products WHERE id=?";
+        $stmt=$this->Connect()->prepare($sql);
+        $stmt->execute([$id]);
+        $row=$stmt->fetch();
+        if($row){
+            if (file_exists($row['product_image'])) {
+                if (unlink($row['product_image'])) {
+                    $sql2="DELETE FROM products WHERE id=?";
+                    $stmt=$this->Connect()->prepare($sql2);
+                    $stmt->execute([$id]);
+                    header("location:admin_dashboard.php? message='Product deleted successfullfy'");
+                } else {
+                    echo 'Unable to delete the file.';
+                }
+            } else {
+                echo 'File does not exist.';
+            }
+        }else{
+            echo "Failed";
+        }
+    }
+
+    public function deleteProductFromCart($id)
+    {
+        $sql="DELETE FROM cart WHERE id=?";
+        $stmt=$this->Connect()->prepare($sql);
+        $stmt->execute([$id]);
+        header("location:cart_page.php");
     }
 }
 

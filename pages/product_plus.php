@@ -5,8 +5,22 @@ include("../classes/product_management.php");
         ini_set('display_errors', 1);
         ini_set('display_startup_errors', 1);
         error_reporting(E_ALL);
+        
+       if(isset($_POST['create'])){
+        $name=$_POST['name'];
+        $desc=$_POST['description'];
+        $price=$_POST['price'];
+        $img_name=$_FILES['image']['name'];
+        $tmp=$_FILES['image']['tmp_name'];
 
+        // echo "Image name is: ".$img_name."  The tmp is: ".$tmp;
+
+        $product=new ProductManager();
+        $product->addProduct($name,$desc,$price, $img_name,$tmp);
+       }
 ?>
+
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -20,9 +34,11 @@ include("../classes/product_management.php");
   </head>
   <body class="bg-dark">
 
+
+
   <nav class="navbar navbar-expand-lg navbar-light bg-dark fixed-top">
         <div class="container-fluid">
-          <a class="navbar-brand" href="users_dashboard.php">
+          <a class="navbar-brand" href="admin_dashboard.php">
            <h1 class="text-white">BELLA GIDDS</h1>
           </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,32 +63,53 @@ include("../classes/product_management.php");
         </div>
       </nav>
 
-
-
-
       <div class="container" style="margin-top: 120px;">
+      <div class="container-fluid">
         <div class=" d-flex justify-content-center">
             <!-- general form elements -->
-            <div style="width:80%;">
+            <div style="width:60%;">
             <div class="card">
               <div class="card-header bg-secondary text-center text-white">
-                <h3 class="card-title">Your cart</h3>
-              </div>
-              
-               <?php
-                    $cart=new ProductManager();
-                    $cart->fetchUsersProductToDisplayOnCart($_SESSION['id']);
-               ?>
-             <!-- card-footer -->
                 
+                <h3 class="card-title">Create product</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form method="POST" enctype="multipart/form-data">
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="productName">Product name</label>
+                    <input type="text" name="name" class="form-control mt-3" id="productName" placeholder="Enter product name">
+                  </div>
+                  <div class="form-group">
+                    <label for="productName">Product description</label>
+                    <input type="text" name="description" class="form-control mt-3" id="description" placeholder="Enter product description">
+                  </div>
+                  <div class="form-group">
+                    <label for="productName">Product price</label>
+                    <input type="number" name="price" class="form-control mt-3" id="price" placeholder="Enter product price">
+                  </div>
+                  <div class="form-group">
+                    <label for="productName">Product image</label>
+                    <input type="file" name="image" class="form-control mt-3">
+                  </div>
+                
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                  <button type="submit" name="create" class="btn btn-primary">Create Product</button>
+                </div>
+              </form>  
             </div>
+      </div>
 
 
  
 
 
   <?php
-    // include("footer.php");
+    include("footer.php");
    include("../includes/foot.php");
    ?>
   </body>

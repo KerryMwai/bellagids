@@ -23,10 +23,6 @@ class User extends Database{
             $failed="The user is already registered";
             header("location:../pages/signin.php ? error=$failed");
         }else{
-                // $tm=md5(time());
-                // $dstenation1="../user_images/".$tm.$this->image_name;
-                // $dstenation2="../user_images/".$tm.$this->image_name;
-                // move_uploaded_file($this->image_tmp, $dstenation2);
                 $passed=password_hash($this->pass,PASSWORD_DEFAULT);
                 $sql="INSERT INTO users(user_email,user_password,is_admin)
                     VALUES(?,?,?)";
