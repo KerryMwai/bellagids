@@ -2,25 +2,18 @@
 session_start();
 include("../classes/database.php");
 include("../classes/product_management.php");
-        ini_set('display_errors', 1);
-        ini_set('display_startup_errors', 1);
-        error_reporting(E_ALL);
-        
-      //  if(isset($_POST['update'])){
-      //   $name=$_POST['name'];
-      //   $desc=$_POST['description'];
-      //   $price=$_POST['price'];
-      //   $img_name=$_FILES['image']['name'];
-      //   $tmp=$_FILES['image']['tmp_name'];
-      //   $category=$_POST['category'];
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
-      //   // echo "Image name is: ".$img_name."  The tmp is: ".$tmp;
+if(isset($_POST['create'])){
+  $name=$_POST['category'];
+  
+  $category=new ProductManager();
+  $category->createCategory($name);
+}
 
-      //   $product=new ProductManager();
-      //   $product->updateProduct($name,$desc,$price, $img_name,$tmp, $_GET['id'],$category);
-      //  }
+
 ?>
-
 
 <!doctype html>
 <html lang="en">
@@ -34,10 +27,9 @@ include("../classes/product_management.php");
     <title>Bellagids</title>
   </head>
   <body class="bg-dark">
-
   <nav class="navbar navbar-expand-lg navbar-light bg-dark fixed-top ">
         <div class="container-fluid">
-          <a class="navbar-brand" href="users_dashboard.php">
+          <a class="navbar-brand" href="admin_dashboard.php">
            <h1 class="text-white">BELLA GIDS</h1>
           </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -92,6 +84,7 @@ include("../classes/product_management.php");
         </div>
       </nav>
 
+
       <div class="container" style="margin-top: 120px;">
       <div class="container-fluid">
         <div class=" d-flex justify-content-center">
@@ -99,18 +92,29 @@ include("../classes/product_management.php");
             <div style="width:60%;">
             <div class="card">
               <div class="card-header bg-secondary text-center text-white">
-                
-                <h3 class="card-title">Edit product</h3>
+                <h3 class="card-title">Update Category</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <?php
-              if(isset($_GET['id'])){
-                $product=new ProductManager();
-                $product->getProductToUpdate($_GET['id']);
-              }
-              
-              ?>
+              <form method="POST">
+                <div class="card-body">
+                  <div class="form-group">
+                    <label class='mb-4 fs-5'>Category Name</label>
+                    <input type="text" name="category" class="form-control my-4 py-2 fs-5" id="inputCategory" placeholder="Enter category name">
+                  </div>
+                
+            
+                  <!-- <div class="form-check mt-2">
+                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                    <label class="form-check-label">Remember me</label>
+                  </div> -->
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                  <button type="submit" name="udpate" class="btn btn-secondary px-4 fs-5">Update</button>
+                </div>
+              </form>  
             </div>
       </div>
 

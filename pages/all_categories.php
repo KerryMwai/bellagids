@@ -59,6 +59,7 @@ include("../classes/product_management.php");
                                 <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Category name</th>
+                                <th scope="col">Action</th>
                                 </tr>
                             </thead>
                             <tbody>

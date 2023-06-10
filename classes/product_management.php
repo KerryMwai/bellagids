@@ -34,6 +34,50 @@ class ProductManager extends Database{
         }
     }
 
+    public function getAllProductsTodisplayForAdminCategory($category)
+    {
+        $sql="SELECT * FROM products  WHERE category=?";
+        $stmt=$this->Connect()->prepare($sql);
+        $stmt->execute([$category]);
+        $rows=$stmt->fetchAll();
+        $count=0;
+        if($rows){
+            foreach($rows as $row){
+                echo "
+                <div class='col-lg-4 col-md-6 col-sm-12'>
+                    <div class='card m-sm-2 m-xsm-2'>
+                    <div class='card-header bg-dark'>
+                        <h3 class='text-white'>$row[product_name]</h3>
+                        <p class='text-white'><span class='text-warning'>Price </span>  KES $row[product_price]/=</p>
+                    </div>
+                    <div class='card-body bg-secondary'>
+                        <img class='img-fluid' src='$row[product_image]' alt=''>
+                    </div>
+                    <div class='card-footer bg-dark'>
+                        <div class='row d-flex'>
+                            <div class='col-8'>
+                                <a href='edit_product.php?id=$row[id]' class='btn  btn-success'>Edit</a>
+                            </div>
+                            <div class='col-4 '>
+                                <a href='delete_product.php?id=$row[id]' class='btn btn-danger float-right'>Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+               ";
+            }
+        }else{
+            echo"
+            <div class='card'>
+                <div class='card-body bg-white'>
+                <h4>There no product of that category</h4>
+                </div> 
+            </div>
+        ";
+        }
+    }
+
     public function getAllProductsTodisplayForUsers()
     {
         $sql="SELECT * FROM products";
@@ -101,7 +145,48 @@ class ProductManager extends Database{
         }
     }
 
-
+    public function getAllProductsTodisplayForUsersForIndexPageCategory($category)
+    {
+        $sql="SELECT * FROM products WHERE category=?";
+        $stmt=$this->Connect()->prepare($sql);
+        $stmt->execute([$category]);
+        $rows=$stmt->fetchAll();
+       if($rows){
+        foreach($rows as $row){
+            echo "
+            <div class='col-lg-4 col-md-6 col-sm-12'>
+                <div class='card m-sm-2 m-xsm-2'>
+                <div class='card-header bg-dark'>
+                    <h3 class='text-white'>$row[product_name]</h3>
+                    <p class='text-white'><span class='text-warning'>Price </span>  KES $row[product_price]/=</p>
+                </div>
+                <div class='card-body bg-secondary'>
+                    <img class='img-fluid' src='$row[product_image]' alt=''>
+                </div>
+                <div class='card-footer bg-dark'>
+                    <div class='row d-flex'>
+                        <div class='col-6'>
+                            <a href='./pages/signin.php' class='text-decoration-none text-warning'><h6>Buy Now</h6></a>
+                        </div>
+                        <div class='col-6'>
+                            <a href='#' class='text-decoration-none text-primary'><h6>See More>></h6></a>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+           ";
+        }
+       }else{
+        echo"
+            <div class='card'>
+                <div class='card-body bg-white'>
+                <h4>There no products of that category</h4>
+                </div> 
+            </div>
+        ";
+       }
+    }
 
     public function addCategory($name)
     {
@@ -284,10 +369,20 @@ class ProductManager extends Database{
         $stmt=$this->Connect()->prepare($sql);
         $stmt->execute([$id]);
         $row=$stmt->fetch();
+       
         if($row){
           echo"
-            <form method='POST' enctype='multipart/form-data'>
+            <form method='POST' enctype='multipart/form-data' action='test.php?id=$_GET[id]'>
                 <div class='card-body'>
+                <div class='form-group'>
+                <label for='productName'>Product category</label>
+                <select class='form-select my-3' name='category'>
+            ";
+                    $this->getAllCategoriesForSelecion();
+                
+        echo"                
+                </select>
+              </div>
                     <div class='form-group'>
                     <label for='productName'>Product name</label>
                     <input type='text' value='$row[product_name]' name='name' class='form-control mt-3' id='productName' placeholder='Enter product name'>
@@ -317,7 +412,7 @@ class ProductManager extends Database{
     }
 
 
-    public function updateProduct($id,$name,$desc,$price,$img_name,$img_tmp)
+    public function updateProduct($id,$name,$desc,$price,$img_name,$img_tmp,$category)
     {
         $sql1="SELECT *FROM products WHERE id=?";
         $stmt1=$this->Connect()->prepare($sql1);
@@ -326,27 +421,28 @@ class ProductManager extends Database{
         if($row){
             $path2=$row['path2'];
             $pro_image=$row['product_image'];
-            if($image_name=='' || $image_tmp==''){
-                $sql2="UPDATE products SET (product_name=?, product_description=?,product_image?,product_price=?,path2=?) WHERE id=?";
+            if($image_name==null || $image_tmp==null){
+                $sql2="UPDATE products SET product_name=?, product_description=?,product_image?,product_price=?,path2=?,category=? WHERE id=?";
                 $stmt2=$this->Connect()->prepare($sql2);
-                $stmt2->execute([$name,$desc,$pro_image,$price,$path2,$id]);
+                $stmt2->execute([$name,$desc,$pro_image,$price,$path2,$category,$id]);
             }else{
                 if (file_exists($row['product_image'])) {
                     if (unlink($row['product_image'])) {
-                        $sql3="DELETE FROM products WHERE id=?";
-                        $stmt=$this->Connect()->prepare($sql3);
-                        $stmt->execute([$id]);
+                        // $sql3="DELETE FROM products WHERE id=?";
+                        // $stmt=$this->Connect()->prepare($sql3);
+                        // $stmt->execute([$id]);
+
+                        $tm=md5(time());
+                        $dstenation1="../images/".$tm.$img_name;
+                        $dstenation2="../images/".$tm.$img_name;
+                        $dstenation3="./images/".$tm.$img_name;
+                        move_uploaded_file($img_tmp, $dstenation2);
+
+                        $sql4="UPDATE products SET (product_name=?, product_description=?,product_image?,product_price=?,path2=?, category=?) WHERE id=?";
+                        $stmt4=$this->Connect()->prepare($sql2);
+                        $stmt4->execute([$name,$desc,$dstenation1,$price,$dstenation3,$category,$id]);
                     } 
 
-                $tm=md5(time());
-                $dstenation1="../images/".$tm.$img_name;
-                $dstenation2="../images/".$tm.$img_name;
-                $dstenation3="./images/".$tm.$img_name;
-                move_uploaded_file($img_tmp, $dstenation2);
-
-                $sql4="UPDATE products SET (product_name=?, product_description=?,product_image?,product_price=?,path2=?) WHERE id=?";
-                $stmt4=$this->Connect()->prepare($sql2);
-                $stmt4->execute([$name,$desc,$dstenation1,$price,$dstenation3,$id]);
             }
         }
     }
@@ -376,6 +472,10 @@ public function fetchAllCategories()
             <tr>
                 <th scope='row'>$count</th>
                 <td>$row[category_name]</td>
+                <td>
+                <a href='edit_category.php?id=$row[id]' class='btn btn-success'>Edit</a>
+
+                </td>
             </tr>
             ";
         }
@@ -405,6 +505,69 @@ public function getAllCategoriesForSelecion()
         }
     }
 }
+
+public function getAllCategoriesForIndexDropdown()
+{
+    $sql="SELECT * FROM categories";
+    $stmt=$this->Connect()->prepare($sql);
+    $stmt->execute();
+    $rows=$stmt->fetchAll();
+    if($rows){
+        foreach($rows as $row){
+            echo "
+                <li><a class='dropdown-item' href='pages/display_indcategory.php?cat=$row[category_name]'>$row[category_name]</a></li>
+            ";
+        }
+    }
+}
+
+public function getAllCategoriesForNestedPageDropdown()
+{
+    $sql="SELECT * FROM categories";
+    $stmt=$this->Connect()->prepare($sql);
+    $stmt->execute();
+    $rows=$stmt->fetchAll();
+    if($rows){
+        foreach($rows as $row){
+            echo "
+                <li><a class='dropdown-item' href='display_indcategory.php?cat=$row[category_name]'>$row[category_name]</a></li>
+            ";
+        }
+    }
+}
+
+public function getAllCategoriesForUsersPageDropdown()
+{
+    $sql="SELECT * FROM categories";
+    $stmt=$this->Connect()->prepare($sql);
+    $stmt->execute();
+    $rows=$stmt->fetchAll();
+    if($rows){
+        foreach($rows as $row){
+            echo "
+                <li><a class='dropdown-item' href='display_uscategory.php?cat=$row[category_name]'>$row[category_name]</a></li>
+            ";
+        }
+    }
+}
+
+
+public function getAllCategoriesForAdminPageDropdown()
+{
+    $sql="SELECT * FROM categories";
+    $stmt=$this->Connect()->prepare($sql);
+    $stmt->execute();
+    $rows=$stmt->fetchAll();
+    if($rows){
+        foreach($rows as $row){
+            echo "
+                <li><a class='dropdown-item' href='display_admcategory.php?cat=$row[category_name]'>$row[category_name]</a></li>
+            ";
+        }
+    }
+}
+
+
 
     public function deleteProduct($id)
     {
