@@ -6,8 +6,9 @@ class ProductManager extends Database{
         $stmt=$this->Connect()->prepare($sql);
         $stmt->execute();
         $rows=$stmt->fetchAll();
+        $count=0;
         foreach($rows as $row){
-           echo "
+            echo "
             <div class='col-lg-4 col-md-6 col-sm-12'>
                 <div class='card m-sm-2 m-xsm-2'>
                 <div class='card-header bg-dark'>
@@ -109,7 +110,7 @@ class ProductManager extends Database{
         $stmt->execute([$name]);
     }
 
-    public function addProduct($name,$desc,$price, $image_name,$image_tmp)
+    public function addProduct($name,$desc,$price, $image_name,$image_tmp, $category)
     {
         $tm=md5(time());
         $dstenation1="../images/".$tm.$image_name;
@@ -118,7 +119,7 @@ class ProductManager extends Database{
         move_uploaded_file($image_tmp, $dstenation2);
         $sql="INSERT INTO products(product_name,product_description,product_image,product_price,path2, category) VALUES(?,?,?,?,?,?)";
         $stmt=$this->Connect()->prepare($sql);
-        $stmt->execute([$name,$desc,$dstenation1,$price,$dstenation3,"General"]);
+        $stmt->execute([$name,$desc,$dstenation1,$price,$dstenation3,$category]);
     }
 
 
@@ -252,13 +253,16 @@ class ProductManager extends Database{
                   
                 }
             }
+            $_SESSION['total_amount']=$total_amount;
             echo "
             </div>
             <div class='card-footer'>
                 <div class='row d-flex'>
                 <div class='col-8 justify-content-end'>
-                    <span class='ml-4'>Total</span>
-                    <span >Ksh. $total_amount</span>
+                    <button class='btn btn-secondary'>
+                        <span class='ml-4'>Total</span>
+                        <span >Ksh. $total_amount</span>
+                    </button>
                 </div>
                 <div class='col-4'>
                     <a href='buy_now.php' class='btn btn-outline-success'>Buy now</a>
@@ -348,6 +352,60 @@ class ProductManager extends Database{
     }
 }
 
+
+public function createCategory($name)
+{
+    $sql="INSERT INTO categories(category_name) VALUES(?)";
+    $stmt=$this->Connect()->prepare($sql);
+    $stmt->execute([$name]);
+    header("location:all_categories.php");
+}
+
+
+public function fetchAllCategories()
+{
+    $sql="SELECT * FROM categories";
+    $stmt=$this->Connect()->prepare($sql);
+    $stmt->execute();
+    $rows=$stmt->fetchAll();
+    $count=0;
+    if($rows){
+        foreach($rows as $row){
+            $count++;
+            echo "
+            <tr>
+                <th scope='row'>$count</th>
+                <td>$row[category_name]</td>
+            </tr>
+            ";
+        }
+    }else{
+        echo "
+        <tr>
+            <p class='fs-2'>There are no categories now</p>
+        </tr>
+        ";
+    }
+}
+
+
+public function getAllCategoriesForSelecion()
+{
+    $sql="SELECT * FROM categories";
+    $stmt=$this->Connect()->prepare($sql);
+    $stmt->execute();
+    $rows=$stmt->fetchAll();
+    $count=0;
+    if($rows){
+        foreach($rows as $row){
+            $count++;
+            echo "
+            <option value='$row[category_name]'>$row[category_name]</option>
+            ";
+        }
+    }
+}
+
     public function deleteProduct($id)
     {
         $sql="SELECT * FROM products WHERE id=?";
@@ -357,6 +415,10 @@ class ProductManager extends Database{
         if($row){
             if (file_exists($row['product_image'])) {
                 if (unlink($row['product_image'])) {
+                    $sql3="DELETE FROM cart WHERE product_id=?";
+                    $stmt3=$this->Connect()->prepare($sql3);
+                    $stmt3->execute([$row['id']]);
+
                     $sql2="DELETE FROM products WHERE id=?";
                     $stmt=$this->Connect()->prepare($sql2);
                     $stmt->execute([$id]);
@@ -382,3 +444,5 @@ class ProductManager extends Database{
 }
 
 ?>
+
+

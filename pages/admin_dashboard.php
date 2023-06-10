@@ -14,9 +14,9 @@ session_start();
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script src="./fontawesome-free-6.4.0-web//js/all.js"></script>
-<script src="./fontawesome-free-6.4.0-web/js/all.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link rel="stylesheet" href="../fontawesome-free-6.4.0-web/css/all.css">
+<link rel="stylesheet" href="../fontawesome-free-6.4.0-web/css/all.min.css">
 
     <title>Bellagids</title>
   </head>
@@ -44,7 +44,8 @@ session_start();
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <li><a class="dropdown-item" aria-current="page" href="product_plus.php"><i class="fa-solid fa-cart-plus"></i><span class="p-2">Add Product</span></a></li>
-                  <li><a class="dropdown-item" href="add_category.php"><i class="fa-solid fa-cart-plus"></i><span class="p-2">Add Category</a></li>
+                  <li><a class="dropdown-item" href="add_category.php"><i class="fa-duotone fa-plus fs-3"></i><span class="p-2">Add Category</a></li>
+                  <li><a class="dropdown-item" href="all_categories.php"><i class="fa-regular fa-eye"></i><span class="p-2">View Categories</a></li>
                 </ul>
               </li>
                   
@@ -86,12 +87,12 @@ session_start();
 
       </div>
 
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<link rel="stylesheet" href="./fontawesome-free-6.4.0-web/css/all.css">
-<link rel="stylesheet" href="./fontawesome-free-6.4.0-web/css/all.min.css">
+
  
 
-
+<script src="../fontawesome-free-6.4.0-web//js/all.js"></script>
+<script src="../fontawesome-free-6.4.0-web/js/all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
   <?php
     include("./pages/footer.php");
    ?>

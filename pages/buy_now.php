@@ -1,16 +1,7 @@
 <?php
+session_start();
 include("../classes/database.php");
 include("../classes/user_management.php");
-
-if(isset($_POST['signin'])){
-  $email=$_POST['email'];
-  $pass=$_POST['password'];
-  $signInUser=new User($email,$pass);
-  $signInUser->SignIn();
-
-}
-
-
 ?>
 
 <!doctype html>
@@ -26,9 +17,38 @@ if(isset($_POST['signin'])){
   </head>
   <body class="bg-dark">
 
-    <?php
-        include("navbar.php")
-    ?>
+  <nav class="navbar navbar-expand-lg navbar-light bg-dark fixed-top">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="users_dashboard.php">
+           <h1 class="text-white">BELLA GIDDS</h1>
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+         
+            <ul class="d-flex">
+            <li class="nav-item">
+                
+                <a class="nav-link active text-white" aria-current="page" href="cart_page.php"><i class="fa-solid fa-cart-plus"></i><span class="p-2">Cart</span></a>
+              </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-user"></i> <span class="p-2">
+                            <?php
+                                echo $_SESSION['user_email'];
+                            ?>
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                      <li><a class="dropdown-item" href="signout.php"><i class="fa-solid fa-right-to-bracket"></i> <span class="p-2">Logout</span></a></li>
+                    </ul>
+                  </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+
       <div class="container" style="margin-top: 120px;">
       <div class="container-fluid">
         <div class=" d-flex justify-content-center">
@@ -36,20 +56,28 @@ if(isset($_POST['signin'])){
             <div style="width:60%;">
             <div class="card">
               <div class="card-header bg-secondary text-center text-white">
-                <h3 class="card-title">Signin</h3>
+                <h3 class="card-title">Enter phone number to pay</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form method="POST">
+              <form method="POST" action='pay.php'>
                 <div class="card-body">
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+                  <div class="form-group my-3">
+                    <label for="exampleInputPassword1">Total amount to pay</label>
+                    <?php
+                        if(isset($_SESSION['total_amount'])){
+                          $amount=$_SESSION['total_amount'];
+                          echo "
+                            <input type='text' value='Ksh. $amount/='  name='amount' class='form-control my-3' disabled>
+                          ";
+                        }
+                    ?>
                   </div>
-                  <div class="form-group">
-                    <label for="exampleInputPassword1">Password</label>
-                    <input type="password" name="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                  <div class="form-group my-3">
+                    <label for="phoneNumber">Email phone number</label>
+                    <input type="text" name="phone" class="form-control my-3" id="phoneNumber" placeholder="Enter phone number">
                   </div>
+                 
             
                   <!-- <div class="form-check mt-2">
                     <input type="checkbox" class="form-check-input" id="exampleCheck1">
@@ -58,8 +86,15 @@ if(isset($_POST['signin'])){
                 </div>
                 <!-- /.card-body -->
 
-                <div class="card-footer">
-                  <button type="submit" name="signin" class="btn btn-primary">Signin</button>
+                <div class="card-footer text-right">
+
+                       <div class="row">
+                        <div class="col-10"></div>
+                        <div class="col-2">
+                        <input type='submit' name="pay" value="Pay" class="btn btn-secondary px-4 float-right">
+                        </div>
+                       </div>
+
                 </div>
               </form>  
             </div>

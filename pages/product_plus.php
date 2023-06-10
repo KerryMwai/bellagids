@@ -12,11 +12,13 @@ include("../classes/product_management.php");
         $price=$_POST['price'];
         $img_name=$_FILES['image']['name'];
         $tmp=$_FILES['image']['tmp_name'];
+        $category=$_POST['category'];
 
         // echo "Image name is: ".$img_name."  The tmp is: ".$tmp;
 
         $product=new ProductManager();
-        $product->addProduct($name,$desc,$price, $img_name,$tmp);
+        $product->addProduct($name,$desc,$price, $img_name,$tmp,$category);
+        header("location:admin_dashboard.php");
        }
 ?>
 
@@ -77,6 +79,16 @@ include("../classes/product_management.php");
               <!-- form start -->
               <form method="POST" enctype="multipart/form-data">
                 <div class="card-body">
+                  <div class="form-group">
+                    <label for="productName">Product category</label>
+                    <select class='form-select my-3' name='category'>
+                      <?php
+                          $categories=new ProductManager();
+                          $categories->getAllCategoriesForSelecion();
+                      ?>
+
+                    </select>
+                  </div>
                   <div class="form-group">
                     <label for="productName">Product name</label>
                     <input type="text" name="name" class="form-control mt-3" id="productName" placeholder="Enter product name">
