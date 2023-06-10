@@ -6,19 +6,20 @@ include("../classes/product_management.php");
         ini_set('display_startup_errors', 1);
         error_reporting(E_ALL);
         
-      //  if(isset($_POST['update'])){
-      //   $name=$_POST['name'];
-      //   $desc=$_POST['description'];
-      //   $price=$_POST['price'];
-      //   $img_name=$_FILES['image']['name'];
-      //   $tmp=$_FILES['image']['tmp_name'];
-      //   $category=$_POST['category'];
+       if(isset($_POST['update'])){
+        $name=$_POST['name'];
+        $desc=$_POST['description'];
+        $price=$_POST['price'];
+        $img_name=$_FILES['image']['name'];
+        $tmp=$_FILES['image']['tmp_name'];
+        $category=$_POST['category'];
 
-      //   // echo "Image name is: ".$img_name."  The tmp is: ".$tmp;
+         echo "Image name is: ".$img_name."  The tmp is: ".$tmp;
 
-      //   $product=new ProductManager();
-      //   $product->updateProduct($name,$desc,$price, $img_name,$tmp, $_GET['id'],$category);
-      //  }
+        $product=new ProductManager();
+        $product->updateProduct($_GET['id'],$name,$desc,$price, $img_name,$tmp,$category);
+        header("location:admin_dashboard.php?message='Product updated successfully'");
+       }
 ?>
 
 
@@ -37,7 +38,7 @@ include("../classes/product_management.php");
 
   <nav class="navbar navbar-expand-lg navbar-light bg-dark fixed-top ">
         <div class="container-fluid">
-          <a class="navbar-brand" href="users_dashboard.php">
+          <a class="navbar-brand" href="admin_dashboard.php">
            <h1 class="text-white">BELLA GIDS</h1>
           </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

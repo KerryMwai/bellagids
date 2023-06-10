@@ -27,6 +27,17 @@ include("../classes/product_management.php");
           </button>
          
             <ul class="d-flex">
+            <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-regular fa-eye"></i> <span class="p-2">
+                        Manage Products
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item mb-3" href="all_categories.php"><i class="fa-solid fa-hexagon-plus"></i> <span class="p-2">View Categories</span></a></li>
+                      <li><a class="dropdown-item mb-3" href="product_plus.php"><i class="fa-solid fa-hexagon-plus"></i> <span class="p-2">Add Product</span></a></li>
+                      <li><a class="dropdown-item mb-3" href="add_category.php"><i class="fa-solid fa-hexagon-plus"></i> <span class="p-2">Add Category</span></a></li>
+                    </ul>
+                  </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fa-solid fa-user"></i> <span class="p-2">

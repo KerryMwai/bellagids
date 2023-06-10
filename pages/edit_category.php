@@ -5,11 +5,11 @@ include("../classes/product_management.php");
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-if(isset($_POST['create'])){
+if(isset($_POST['update'])){
   $name=$_POST['category'];
-  
+    // echo $name;
   $category=new ProductManager();
-  $category->createCategory($name);
+  $category->updateCategory($_GET['id'],$name);
 }
 
 
@@ -100,7 +100,12 @@ if(isset($_POST['create'])){
                 <div class="card-body">
                   <div class="form-group">
                     <label class='mb-4 fs-5'>Category Name</label>
-                    <input type="text" name="category" class="form-control my-4 py-2 fs-5" id="inputCategory" placeholder="Enter category name">
+                    <?php
+                        if(isset($_GET['id'])){
+                            $category=new ProductManager();
+                            $category->getCategoryToUpdte($_GET['id']);
+                        }
+                    ?>
                   </div>
                 
             
@@ -112,7 +117,7 @@ if(isset($_POST['create'])){
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" name="udpate" class="btn btn-secondary px-4 fs-5">Update</button>
+                  <button type="submit" name="update" class="btn btn-secondary px-4 fs-5">Update</button>
                 </div>
               </form>  
             </div>

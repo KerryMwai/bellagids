@@ -372,7 +372,7 @@ class ProductManager extends Database{
        
         if($row){
           echo"
-            <form method='POST' enctype='multipart/form-data' action='test.php?id=$_GET[id]'>
+            <form method='POST' enctype='multipart/form-data'>
                 <div class='card-body'>
                 <div class='form-group'>
                 <label for='productName'>Product category</label>
@@ -421,30 +421,36 @@ class ProductManager extends Database{
         if($row){
             $path2=$row['path2'];
             $pro_image=$row['product_image'];
-            if($image_name==null || $image_tmp==null){
-                $sql2="UPDATE products SET product_name=?, product_description=?,product_image?,product_price=?,path2=?,category=? WHERE id=?";
+            if($img_name==null || $img_tmp==null){
+                $sql2="UPDATE products SET product_name=?, product_description=?,product_image=?,product_price=?,path2=?,category=? WHERE id=?";
                 $stmt2=$this->Connect()->prepare($sql2);
                 $stmt2->execute([$name,$desc,$pro_image,$price,$path2,$category,$id]);
             }else{
                 if (file_exists($row['product_image'])) {
                     if (unlink($row['product_image'])) {
-                        // $sql3="DELETE FROM products WHERE id=?";
-                        // $stmt=$this->Connect()->prepare($sql3);
-                        // $stmt->execute([$id]);
+                       
+                    }
+                    $tm=md5(time());
+                    $dstenation1="../images/".$tm.$img_name;
+                    $dstenation2="../images/".$tm.$img_name;
+                    $dstenation3="./images/".$tm.$img_name;
+                    move_uploaded_file($img_tmp, $dstenation2);
 
-                        $tm=md5(time());
-                        $dstenation1="../images/".$tm.$img_name;
-                        $dstenation2="../images/".$tm.$img_name;
-                        $dstenation3="./images/".$tm.$img_name;
-                        move_uploaded_file($img_tmp, $dstenation2);
-
-                        $sql4="UPDATE products SET (product_name=?, product_description=?,product_image?,product_price=?,path2=?, category=?) WHERE id=?";
-                        $stmt4=$this->Connect()->prepare($sql2);
-                        $stmt4->execute([$name,$desc,$dstenation1,$price,$dstenation3,$category,$id]);
-                    } 
-
+                    $sql4="UPDATE products SET product_name=?, product_description=?,product_image=?,product_price=?,path2=?, category=? WHERE id=?";
+                    $stmt4=$this->Connect()->prepare($sql4);
+                    $stmt4->execute([$name,$desc,$dstenation1,$price,$dstenation3,$category,$id]); 
+                
             }
         }
+    }
+    else{
+        echo "
+        <div class='card' style='margin-top:30%'>
+            <div class='card-body text-center bg-white'>
+                <h3>No product found</h3>
+            </div>
+        </div>
+        ";
     }
 }
 
@@ -488,6 +494,19 @@ public function fetchAllCategories()
     }
 }
 
+public function getCategoryToUpdte($id)
+{
+    $sql="SELECT * FROM categories WHERE id=?";
+    $stmt=$this->Connect()->prepare($sql);
+    $stmt->execute([$id]);
+    $row=$stmt->fetch();
+    if($row){
+       
+        echo "
+        <input type='text' value='$row[category_name]' name='category' class='form-control my-4 py-2 fs-5' id='inputCategory' placeholder='Enter category name'>
+        ";
+    }
+}
 
 public function getAllCategoriesForSelecion()
 {
@@ -519,6 +538,26 @@ public function getAllCategoriesForIndexDropdown()
             ";
         }
     }
+}
+
+public function updateCategory($id, $name)
+{   
+    $sql0="SELECT * FROM categories WHERE id=?";
+    $stmt0=$this->Connect()->prepare($sql0);
+    $stmt0->execute([$id]);
+    $row=$stmt0->fetch();
+    if($row){
+        $stmt1=$this->Connect()->prepare("UPDATE products SET category=? WHERE category=?");
+        $stmt1->execute([$name, $row['category_name']]);
+    }
+
+    $sql="UPDATE categories SET category_name=? WHERE id=?";
+    $stmt=$this->Connect()->prepare($sql);
+    $stmt->execute([$name,$id]);
+
+    
+    header("location:all_categories.php?message='Category updated successfully'");
+
 }
 
 public function getAllCategoriesForNestedPageDropdown()
@@ -604,7 +643,51 @@ public function getAllCategoriesForAdminPageDropdown()
         $stmt->execute([$id]);
         header("location:cart_page.php");
     }
+
+    public function searchForProductInd($serchTerm)
+{
+    $term='%'.$serchTerm.'%';
+    $sql="SELECT id,product_name,product_price, category,path2 FROM products
+    WHERE product_name LIKE ?
+    OR product_price LIKE ?
+    OR category LIKE ?";
+    $stmt=$this->Connect()->prepare($sql);
+    $stmt->execute([$term,$term,$term]);
+
+    $rows=$stmt->fetchAll();
+    if($rows){
+        foreach($rows as $row){
+            echo "
+            <div class='col-lg-4 col-md-6 col-sm-12'>
+                <div class='card m-sm-2 m-xsm-2'>
+                <div class='card-header bg-dark'>
+                    <h3 class='text-white'>$row[product_name]</h3>
+                    <p class='text-white'><span class='text-warning'>Price </span>  KES $row[product_price]/=</p>
+                </div>
+                <div class='card-body bg-secondary'>
+                    <img class='img-fluid' src='$row[path2]' alt=''>
+                </div>
+                <div class='card-footer bg-dark'>
+                    <div class='row d-flex'>
+                        <div class='col-8'>
+                            <a href='edit_product.php?id=$row[id]' class='btn  btn-success'>Edit</a>
+                        </div>
+                        <div class='col-4 '>
+                            <a href='delete_product.php?id=$row[id]' class='btn btn-danger float-right'>Delete</a>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+           ";
+        }
+    }
 }
+}
+
+
+
+
 
 ?>
 

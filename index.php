@@ -47,9 +47,9 @@ session_start();
                 </ul>
               </li>
             </ul>
-            <form class="d-flex">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success" type="submit">Search</button>
+            <form method='POST' class="d-flex">
+              <input class="form-control me-2" name="searchterm" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success" name="searchbtn" type="submit">Search</button>
             </form>
             <ul class="d-flex">
                 <li class="nav-item dropdown">
@@ -73,8 +73,14 @@ session_start();
         </div>
         <div class="row mb-lg-4 mb-md-4 mb-sm-4 ">
             <?php
-                $products=new ProductManager();
-                $products->getAllProductsTodisplayForUsersForIndexPage();
+             $products=new ProductManager();
+                if(isset($_POST['searchbtn'])){
+                  $term=$_POST['searchterm'];
+                  $products->searchForProductInd($term);
+                }else{
+                 
+                  $products->getAllProductsTodisplayForUsersForIndexPage();
+                }
            ?>
         </div>
 
