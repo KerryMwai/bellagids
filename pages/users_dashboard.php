@@ -63,7 +63,12 @@ session_start();
             <ul class="d-flex">
                 <li class="nav-item">
                 
-                    <a class="nav-link active text-white" aria-current="page" href="cart_page.php"><i class="fa-solid fa-cart-plus"></i><span class="p-2">Cart</span></a>
+                    <a class="nav-link active text-white" aria-current="page" href="cart_page.php"><i class="fa-solid fa-cart-plus fs-5"></i><span class="p-2"></span><span class="badge badge-light fs-6 bg-danger px-2 text-white">
+                      <?php
+                        $items=new ProductManager();
+                        echo $items->countProductsOnCart($_SESSION['id']);
+                      ?>
+                    </span></a>
                   </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -83,7 +88,7 @@ session_start();
       </nav>
 
       <div class="container" style="margin-top: 120px;">
-        <div class="row d-flex mb-4 jsutify-content-center">
+        <div class="row d-flex mb-4 jsutify-content-center text-center text-white">
             <h2>Happy Shopping</h2>
 
         </div>

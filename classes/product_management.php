@@ -362,6 +362,22 @@ class ProductManager extends Database{
 
     }
 
+    public function countProductsOnCart($id)
+    {
+        $sql="SELECT * FROM cart WHERE client_id=?";
+        $stmt=$this->Connect()->prepare($sql);
+        $stmt->execute([$id]);
+        $rows=$stmt->fetchAll();
+        $total_items=0;
+        if($rows){
+            foreach($rows as $row){
+                $total_items++;
+            }
+
+            return $total_items;
+        }
+    }
+
 
     public function getProductToUpdate($id)
     {
@@ -393,7 +409,7 @@ class ProductManager extends Database{
                     </div>
                     <div class='form-group'>
                     <label for='productName'>Product price</label>
-                    <input type='number' value='$row[product_price]' name='price' class='form-control mt-3' id='price' placeholder='Enter product price'>
+                    <input type='number' step='any' value='$row[product_price]' name='price' class='form-control mt-3' id='price' placeholder='Enter product price'>
                     </div>
                     <div class='form-group'>
                     <label for='productName'>Product image</label>
@@ -479,12 +495,13 @@ public function fetchAllCategories()
                 <th scope='row'>$count</th>
                 <td>$row[category_name]</td>
                 <td>
-                <a href='edit_category.php?id=$row[id]' class='btn btn-success'>Edit</a>
-
+                <a href='edit_category.php?id=$row[id]' class='btn btn-success px-4'>Edit</a>
+                <a href='delete_category.php?id=$row[id]' class='btn btn-danger mx-4'>Delete</a>
                 </td>
             </tr>
             ";
         }
+        // <a href='delete_category.php?id=$row[id]' class='btn btn-danger mx-4'>Delete</a>
     }else{
         echo "
         <tr>
@@ -764,6 +781,17 @@ public function searchForProductInd($serchTerm)
             }
         }
     }
+
+
+    public function deleteCategory($id)
+    {
+        $sql="DELETE FROM categories WHERE id=?";
+        $stmt=$this->Connect()->prepare($sql);
+        $stmt->execute([$id]);
+        header("location:all_categories.php");
+    }
+
+
 
 }
 

@@ -107,7 +107,7 @@ include("../classes/product_management.php");
                   </div>
                   <div class="form-group">
                     <label for="productName">Product price</label>
-                    <input type="number" name="price" class="form-control mt-3" id="price" placeholder="Enter product price">
+                    <input type="number" step="any" name="price" class="form-control mt-3" id="price" placeholder="Enter product price">
                   </div>
                   <div class="form-group">
                     <label for="productName">Product image</label>
