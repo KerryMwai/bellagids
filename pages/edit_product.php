@@ -6,7 +6,7 @@ include("../classes/product_management.php");
         ini_set('display_startup_errors', 1);
         error_reporting(E_ALL);
         
-       if(isset($_POST['update'])){
+       if(isset($_SESSION['is_admin']) && $_SESSION['is_admin']==1 && isset($_POST['update'])){
         $name=$_POST['name'];
         $desc=$_POST['description'];
         $price=$_POST['price'];
@@ -14,7 +14,7 @@ include("../classes/product_management.php");
         $tmp=$_FILES['image']['tmp_name'];
         $category=$_POST['category'];
 
-         echo "Image name is: ".$img_name."  The tmp is: ".$tmp;
+        //  echo "Image name is: ".$img_name."  The tmp is: ".$tmp;
 
         $product=new ProductManager();
         $product->updateProduct($_GET['id'],$name,$desc,$price, $img_name,$tmp,$category);
@@ -54,8 +54,10 @@ include("../classes/product_management.php");
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <?php
+                  if(isset($_SESSION['is_admin']) && $_SESSION['is_admin']==1){
                       $categories=new ProductManager();
                       $categories->getAllCategoriesForAdminPageDropdown();
+                  }
                     ?>
                 </ul>
               </li>
@@ -106,7 +108,7 @@ include("../classes/product_management.php");
               <!-- /.card-header -->
               <!-- form start -->
               <?php
-              if(isset($_GET['id'])){
+              if(isset($_SESSION['is_admin']) && $_SESSION['is_admin']==1 && isset($_GET['id'])){
                 $product=new ProductManager();
                 $product->getProductToUpdate($_GET['id']);
               }

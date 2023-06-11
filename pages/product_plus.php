@@ -6,7 +6,7 @@ include("../classes/product_management.php");
         ini_set('display_startup_errors', 1);
         error_reporting(E_ALL);
         
-       if(isset($_POST['create'])){
+       if(isset($_SESSION['is_admin']) && $_SESSION['is_admin']==1 && isset($_POST['create'])){
         $name=$_POST['name'];
         $desc=$_POST['description'];
         $price=$_POST['price'];
@@ -40,9 +40,15 @@ include("../classes/product_management.php");
 
   <nav class="navbar navbar-expand-lg navbar-light bg-dark fixed-top">
         <div class="container-fluid">
-          <a class="navbar-brand" href="admin_dashboard.php">
-           <h1 class="text-white">BELLA GIDDS</h1>
-          </a>
+          <?php
+                   if(isset($_SESSION['is_admin']) && $_SESSION['is_admin']==1){
+                    echo"
+                    <a class='navbar-brand' href='admin_dashboard.php'>
+                    <h1 class='text-white'>BELLA GIDS</h1>
+                   </a>
+                    ";
+                  }
+          ?>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -83,8 +89,10 @@ include("../classes/product_management.php");
                     <label for="productName">Product category</label>
                     <select class='form-select my-3' name='category'>
                       <?php
+                      if(isset($_SESSION['is_admin']) && $_SESSION['is_admin']==1){
                           $categories=new ProductManager();
                           $categories->getAllCategoriesForSelecion();
+                      }
                       ?>
 
                     </select>

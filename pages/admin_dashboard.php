@@ -23,9 +23,15 @@ session_start();
   <body class="bg-dark">
   <nav class="navbar navbar-expand-lg navbar-light bg-dark fixed-top ">
         <div class="container-fluid">
-          <a class="navbar-brand" href="users_dashboard.php">
-           <h1 class="text-white">BELLA GIDS</h1>
-          </a>
+        <?php
+            if(isset($_SESSION['is_admin']) && $_SESSION['is_admin']==1){
+              echo"
+              <a class='navbar-brand' href='admin_dashboard.php'>
+              <h1 class='text-white'>BELLA GIDS</h1>
+             </a>
+              ";
+            }
+          ?>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -38,16 +44,19 @@ session_start();
                   Categories
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <?php
-                      $categories=new ProductManager();
-                      $categories->getAllCategoriesForAdminPageDropdown();
-                    ?>
+                  <?php
+                  if(isset($_SESSION['is_admin']) && $_SESSION['is_admin']==1){
+                    $categories=new ProductManager();
+                    $categories->getAllCategoriesForAdminPageDropdown();
+
+                  }
+                  ?>
                 </ul>
               </li>
             </ul>
-            <form class="d-flex">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success" type="submit">Search</button>
+            <form method="POST" class="d-flex">
+              <input class="form-control me-2" type="search" name="searchterm" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success" name="searchbtn" type="submit">Search</button>
             </form>
             <ul class="d-flex">
             <li class="nav-item dropdown">
@@ -90,8 +99,18 @@ session_start();
 
         <div class="row mb-lg-4 mb-md-4 mb-sm-4 ">
            <?php
-            $products=new ProductManager();
-            $products->getAllProductsTodisplayForAdmin();
+            if(isset($_SESSION['is_admin']) && $_SESSION['is_admin']==1){
+              
+              $products=new ProductManager();
+              if(isset($_POST['searchbtn'])){
+                $term=$_POST['searchterm'];
+                $products->searchForProductForAdm($term);
+              }else{
+                $products->getAllProductsTodisplayForAdmin();;
+              }
+            }else{
+              header("location:signin.php");
+            }
            ?>
         </div>
 

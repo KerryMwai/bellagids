@@ -5,7 +5,7 @@ include("../classes/product_management.php");
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-if(isset($_POST['create'])){
+if(isset($_SESSION['is_admin']) && $_SESSION['is_admin']==1 && isset($_POST['create'])){
   $name=$_POST['category'];
   
   $category=new ProductManager();
@@ -29,9 +29,15 @@ if(isset($_POST['create'])){
   <body class="bg-dark">
   <nav class="navbar navbar-expand-lg navbar-light bg-dark fixed-top ">
         <div class="container-fluid">
-          <a class="navbar-brand" href="admin_dashboard.php">
-           <h1 class="text-white">BELLA GIDS</h1>
-          </a>
+        <?php
+            if(isset($_SESSION['is_admin']) && $_SESSION['is_admin']==1){
+              echo"
+              <a class='navbar-brand' href='admin_dashboard.php'>
+              <h1 class='text-white'>BELLA GIDS</h1>
+             </a>
+              ";
+            }
+          ?>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -45,16 +51,14 @@ if(isset($_POST['create'])){
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <?php
-                      $categories=new ProductManager();
-                      $categories->getAllCategoriesForAdminPageDropdown();
+                          if(isset($_SESSION['is_admin']) && $_SESSION['is_admin']==1){
+                            $categories=new ProductManager();
+                            $categories->getAllCategoriesForAdminPageDropdown();
+                           }
                     ?>
                 </ul>
               </li>
             </ul>
-            <form class="d-flex">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
             <ul class="d-flex">
             <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

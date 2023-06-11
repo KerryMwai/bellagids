@@ -44,7 +44,7 @@ class User extends Database{
 
             if($passed){
                 session_start();
-                $_SESSION['id']=$row['id'];
+                $_SESSION['is_admin']=$row['is_admin'];
                 $_SESSION['user_email']=$row['user_email'];
                 if($row['is_admin']==1){
                     header("location:../pages/admin_dashboard.php");

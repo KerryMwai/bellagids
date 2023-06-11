@@ -5,7 +5,7 @@ include("../classes/product_management.php");
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-if(isset($_POST['update'])){
+if(isset($_SESSION['is_admin']) && $_SESSION['is_admin']==1 && isset($_POST['update'])){
   $name=$_POST['category'];
     // echo $name;
   $category=new ProductManager();
@@ -29,9 +29,15 @@ if(isset($_POST['update'])){
   <body class="bg-dark">
   <nav class="navbar navbar-expand-lg navbar-light bg-dark fixed-top ">
         <div class="container-fluid">
-          <a class="navbar-brand" href="admin_dashboard.php">
-           <h1 class="text-white">BELLA GIDS</h1>
-          </a>
+          <?php
+            if(isset($_SESSION['is_admin']) && $_SESSION['is_admin']==1){
+              echo"
+              <a class='navbar-brand' href='admin_dashboard.php'>
+              <h1 class='text-white'>BELLA GIDS</h1>
+             </a>
+              ";
+            }
+          ?>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -45,8 +51,10 @@ if(isset($_POST['update'])){
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <?php
-                      $categories=new ProductManager();
-                      $categories->getAllCategoriesForAdminPageDropdown();
+                        if(isset($_SESSION['is_admin']) && $_SESSION['is_admin']==1){
+                          $categories=new ProductManager();
+                          $categories->getAllCategoriesForAdminPageDropdown();
+                        }
                     ?>
                 </ul>
               </li>
@@ -101,7 +109,7 @@ if(isset($_POST['update'])){
                   <div class="form-group">
                     <label class='mb-4 fs-5'>Category Name</label>
                     <?php
-                        if(isset($_GET['id'])){
+                        if(isset($_SESSION['is_admin']) && $_SESSION['is_admin']==1 && isset($_GET['id'])){
                             $category=new ProductManager();
                             $category->getCategoryToUpdte($_GET['id']);
                         }

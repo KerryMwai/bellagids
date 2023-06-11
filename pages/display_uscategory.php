@@ -40,8 +40,10 @@ session_start();
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <?php
+                     if(isset($_SESSION['is_amin']) && $_SESSION['is_admin']==0){
                       $categories=new ProductManager();
                       $categories->getAllCategoriesForUsersPageDropdown();
+                     }
                     ?>
                 </ul>
               </li>

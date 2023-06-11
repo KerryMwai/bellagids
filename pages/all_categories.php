@@ -19,9 +19,15 @@ include("../classes/product_management.php");
 <body class="bg-dark">
 <nav class="navbar navbar-expand-lg navbar-light bg-dark fixed-top">
         <div class="container-fluid">
-          <a class="navbar-brand" href="admin_dashboard.php">
-           <h1 class="text-white">BELLA GIDDS</h1>
-          </a>
+        <?php
+            if(isset($_SESSION['is_admin']) && $_SESSION['is_admin']==1){
+              echo"
+              <a class='navbar-brand' href='admin_dashboard.php'>
+              <h1 class='text-white'>BELLA GIDS</h1>
+             </a>
+              ";
+            }
+          ?>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -75,8 +81,10 @@ include("../classes/product_management.php");
                             </thead>
                             <tbody>
                                <?php
-                                    $categories=new ProductManager();
-                                    $categories->fetchAllCategories();
+                                    if(isset($_SESSION['is_admin']) && $_SESSION['is_admin']==1){
+                                      $categories=new ProductManager();
+                                      $categories->fetchAllCategories();
+                                    }
                                ?>
                             </tbody>
                         </table>

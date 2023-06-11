@@ -22,9 +22,15 @@ include("../classes/product_management.php");
 
   <nav class="navbar navbar-expand-lg navbar-light bg-dark fixed-top">
         <div class="container-fluid">
-          <a class="navbar-brand" href="users_dashboard.php">
-           <h1 class="text-white">BELLA GIDDS</h1>
-          </a>
+        <?php
+            if(isset($_SESSION['is_admin']) && $_SESSION['is_admin']==0){
+              echo "
+              <a class='navbar-brand' href='users_dashboard.php'>
+                <h1 class='text-white'>BELLA GIDDS</h1>
+              </a>
+              ";
+            }
+          ?>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -60,8 +66,10 @@ include("../classes/product_management.php");
               </div>
               
                <?php
+                   if(isset($_SESSION['is_admin']) && $_SESSION['is_admin']==0){
                     $cart=new ProductManager();
                     $cart->fetchUsersProductToDisplayOnCart($_SESSION['id']);
+                   }
                ?>
              <!-- card-footer -->
                 

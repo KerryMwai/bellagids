@@ -19,9 +19,15 @@ include("../classes/user_management.php");
 
   <nav class="navbar navbar-expand-lg navbar-light bg-dark fixed-top">
         <div class="container-fluid">
-          <a class="navbar-brand" href="users_dashboard.php">
-           <h1 class="text-white">BELLA GIDDS</h1>
-          </a>
+          <?php
+            if(isset($_SESSION['is_admin']) && $_SESSION['is_admin']==0){
+              echo "
+              <a class='navbar-brand' href='users_dashboard.php'>
+              <h1 class='text-white'>BELLA GIDDS</h1>
+             </a>
+              ";
+            }
+          ?>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -65,7 +71,7 @@ include("../classes/user_management.php");
                   <div class="form-group my-3">
                     <label for="exampleInputPassword1">Total amount to pay</label>
                     <?php
-                        if(isset($_SESSION['total_amount'])){
+                        if(isset($_SESSION['is_admin']) && $_SESSION['is_admin']==0 && isset($_SESSION['total_amount'])){
                           $amount=$_SESSION['total_amount'];
                           echo "
                             <input type='text' value='Ksh. $amount/='  name='amount' class='form-control my-3' disabled>

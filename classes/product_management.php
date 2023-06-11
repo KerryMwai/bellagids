@@ -446,7 +446,7 @@ class ProductManager extends Database{
     else{
         echo "
         <div class='card' style='margin-top:30%'>
-            <div class='card-body text-center bg-white'>
+            <div class='card-body text-center '>
                 <h3>No product found</h3>
             </div>
         </div>
@@ -644,20 +644,101 @@ public function getAllCategoriesForAdminPageDropdown()
         header("location:cart_page.php");
     }
 
-    public function searchForProductInd($serchTerm)
-{
-    $term='%'.$serchTerm.'%';
-    $sql="SELECT id,product_name,product_price, category,path2 FROM products
-    WHERE product_name LIKE ?
-    OR product_price LIKE ?
-    OR category LIKE ?";
-    $stmt=$this->Connect()->prepare($sql);
-    $stmt->execute([$term,$term,$term]);
+public function searchForProductInd($serchTerm)
+    {
+        $term='%'.$serchTerm.'%';
+        $sql="SELECT id,product_name,product_price, category,path2 FROM products
+        WHERE product_name LIKE ?
+        OR product_price LIKE ?
+        OR category LIKE ?";
+        $stmt=$this->Connect()->prepare($sql);
+        $stmt->execute([$term,$term,$term]);
 
-    $rows=$stmt->fetchAll();
-    if($rows){
-        foreach($rows as $row){
-            echo "
+        $rows=$stmt->fetchAll();
+        if($rows){
+            foreach($rows as $row){
+                echo "
+                <div class='col-lg-4 col-md-6 col-sm-12'>
+                    <div class='card m-sm-2 m-xsm-2'>
+                    <div class='card-header bg-dark'>
+                        <h3 class='text-white'>$row[product_name]</h3>
+                        <p class='text-white'><span class='text-warning'>Price </span>  KES $row[product_price]/=</p>
+                    </div>
+                    <div class='card-body bg-secondary'>
+                        <img class='img-fluid' src='$row[path2]' alt=''>
+                    </div>
+                    <div class='card-footer bg-dark'>
+                        <div class='row d-flex'>
+                            <div class='col-8'>
+                                <a href='edit_product.php?id=$row[id]' class='btn  btn-success'>Edit</a>
+                            </div>
+                            <div class='col-4 '>
+                                <a href='delete_product.php?id=$row[id]' class='btn btn-danger float-right'>Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            ";
+            }
+        }
+    }
+
+    public function searchForProductForAdm($serchTerm)
+    {
+        $term='%'.$serchTerm.'%';
+        $sql="SELECT id,product_name,product_price, category, product_image FROM products
+        WHERE product_name LIKE ?
+        OR product_price LIKE ?
+        OR category LIKE ?";
+        $stmt=$this->Connect()->prepare($sql);
+        $stmt->execute([$term,$term,$term]);
+
+        $rows=$stmt->fetchAll();
+        if($rows){
+            foreach($rows as $row){
+                echo "
+                <div class='col-lg-4 col-md-6 col-sm-12'>
+                    <div class='card m-sm-2 m-xsm-2'>
+                    <div class='card-header bg-dark'>
+                        <h3 class='text-white'>$row[product_name]</h3>
+                        <p class='text-white'><span class='text-warning'>Price </span>  KES $row[product_price]/=</p>
+                    </div>
+                    <div class='card-body bg-secondary'>
+                        <img class='img-fluid' src='$row[product_image]' alt=''>
+                    </div>
+                    <div class='card-footer bg-dark'>
+                        <div class='row d-flex'>
+                            <div class='col-8'>
+                                <a href='edit_product.php?id=$row[id]' class='btn  btn-success'>Edit</a>
+                            </div>
+                            <div class='col-4 '>
+                                <a href='delete_product.php?id=$row[id]' class='btn btn-danger float-right'>Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            ";
+            }
+        }
+    }
+
+
+    public function searchForProductForUsers($serchTerm)
+    {
+        $term='%'.$serchTerm.'%';
+        $sql="SELECT id,product_name,product_price, category, product_image FROM products
+        WHERE product_name LIKE ?
+        OR product_price LIKE ?
+        OR category LIKE ?";
+        $stmt=$this->Connect()->prepare($sql);
+        $stmt->execute([$term,$term,$term]);
+
+        $rows=$stmt->fetchAll();
+        if($rows){
+            foreach($rows as $row){
+                echo "
             <div class='col-lg-4 col-md-6 col-sm-12'>
                 <div class='card m-sm-2 m-xsm-2'>
                 <div class='card-header bg-dark'>
@@ -665,24 +746,25 @@ public function getAllCategoriesForAdminPageDropdown()
                     <p class='text-white'><span class='text-warning'>Price </span>  KES $row[product_price]/=</p>
                 </div>
                 <div class='card-body bg-secondary'>
-                    <img class='img-fluid' src='$row[path2]' alt=''>
+                    <img class='img-fluid' src='$row[product_image]' alt=''>
                 </div>
                 <div class='card-footer bg-dark'>
                     <div class='row d-flex'>
-                        <div class='col-8'>
-                            <a href='edit_product.php?id=$row[id]' class='btn  btn-success'>Edit</a>
+                        <div class='col-6'>
+                            <a href='add_to_cart.php?id=$row[id]' class='text-decoration-none text-warning'><h6>Add to cart</h6></a>
                         </div>
-                        <div class='col-4 '>
-                            <a href='delete_product.php?id=$row[id]' class='btn btn-danger float-right'>Delete</a>
+                        <div class='col-6'>
+                            <a href='#' class='text-decoration-none text-primary'><h6>See More>></h6></a>
                         </div>
                     </div>
                 </div>
                 </div>
             </div>
            ";
+            }
         }
     }
-}
+
 }
 
 
