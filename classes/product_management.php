@@ -686,17 +686,17 @@ public function searchForProductInd($serchTerm)
                     </div>
                     <div class='card-footer bg-dark'>
                         <div class='row d-flex'>
-                            <div class='col-8'>
-                                <a href='edit_product.php?id=$row[id]' class='btn  btn-success'>Edit</a>
+                            <div class='col-6'>
+                                <a href='./pages/signin.php' class='text-decoration-none text-warning'><h6>Buy Now</h6></a>
                             </div>
-                            <div class='col-4 '>
-                                <a href='delete_product.php?id=$row[id]' class='btn btn-danger float-right'>Delete</a>
+                            <div class='col-6'>
+                                <a href='#' class='text-decoration-none text-primary'><h6>See More>></h6></a>
                             </div>
                         </div>
                     </div>
                     </div>
                 </div>
-            ";
+               ";
             }
         }
     }
