@@ -791,7 +791,13 @@ public function searchForProductInd($serchTerm)
         header("location:all_categories.php");
     }
 
-
+    public function saveTransactionDetails($MerchantRequestID,$CheckoutRequestID,$ResultCode, $ResultDesc,$Amount,$TransactionId,$UserPhoneNumber)
+    {
+        $sql="INSERT INTO mpesa_transactions(merchant_request_id,checkout_request_id,result_code,result_description,amount,transaction_id,user_phone_number)VALUES(?,?,?,?,?,?,?)";
+        $stmt=$this->Connect()->prepare($sql);
+        $stmt->execute([$MerchantRequestID,$CheckoutRequestID,$ResultCode, $ResultDesc,$Amount,$TransactionId,$UserPhoneNumber]);
+        header("location:../pages/users_dashboard.php");
+    }
 
 }
 

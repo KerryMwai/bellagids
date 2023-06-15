@@ -2,6 +2,10 @@
 session_start();
 include("../classes/database.php");
 include("../classes/user_management.php");
+if(isset($_POST['pay'])){
+  $_SESSION['phone']=$_POST['phone'];
+  header("location:../daraja/stk_push.php");
+}
 ?>
 
 <!doctype html>
@@ -66,7 +70,7 @@ include("../classes/user_management.php");
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <form method="POST" action='pay.php'>
+              <form method="POST">
                 <div class="card-body">
                   <div class="form-group my-3">
                     <label for="exampleInputPassword1">Total amount to pay</label>
@@ -80,15 +84,10 @@ include("../classes/user_management.php");
                     ?>
                   </div>
                   <div class="form-group my-3">
-                    <label for="phoneNumber">Email phone number</label>
-                    <input type="text" name="phone" class="form-control my-3" id="phoneNumber" placeholder="Enter phone number">
+                    <label for="phoneNumber">Enter phone number</label>
+                    <input type="text" name="phone" class="form-control my-3" id="phoneNumber" placeholder="Like  this 0712345678">
                   </div>
                  
-            
-                  <!-- <div class="form-check mt-2">
-                    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                    <label class="form-check-label">Remember me</label>
-                  </div> -->
                 </div>
                 <!-- /.card-body -->
 
