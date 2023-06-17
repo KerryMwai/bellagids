@@ -95,7 +95,7 @@ include("../classes/product_management.php");
         </div>
       </nav>
 
-      <div class="container" style="margin-top: 120px;">
+      <div class="container" style="margin-top: 120px;margin-bottom: 120px;">
       <div class="container-fluid">
         <div class=" d-flex justify-content-center">
             <!-- general form elements -->
