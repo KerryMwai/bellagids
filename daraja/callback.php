@@ -1,5 +1,4 @@
 <?php
-session_start();
 include ("../classes/database.php");
 include ("../classes/product_management.php");
 header("Content-Type: application/json");

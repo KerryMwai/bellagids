@@ -16,7 +16,7 @@ class ProductManager extends Database{
                     <p class='text-white'><span class='text-warning'>Price </span>  KES $row[product_price]/=</p>
                 </div>
                 <div class='card-body bg-secondary'>
-                    <img class='img-fluid' src='$row[product_image]' alt=''>
+                    <img class='img-fluid' src='$row[product_image]' style='height:25rem;'>
                 </div>
                 <div class='card-footer bg-dark'>
                     <div class='row d-flex'>
@@ -51,7 +51,7 @@ class ProductManager extends Database{
                         <p class='text-white'><span class='text-warning'>Price </span>  KES $row[product_price]/=</p>
                     </div>
                     <div class='card-body bg-secondary'>
-                        <img class='img-fluid' src='$row[product_image]' alt=''>
+                        <img class='img-fluid' src='$row[product_image]' style='height:25rem;' alt=''>
                     </div>
                     <div class='card-footer bg-dark'>
                         <div class='row d-flex'>
@@ -93,7 +93,7 @@ class ProductManager extends Database{
                     <p class='text-white'><span class='text-warning'>Price </span>  KES $row[product_price]/=</p>
                 </div>
                 <div class='card-body bg-secondary'>
-                    <img class='img-fluid' src='$row[product_image]' alt=''>
+                    <img class='img-fluid' src='$row[product_image]' style='height:25rem;' alt=''>
                 </div>
                 <div class='card-footer bg-dark'>
                     <div class='row d-flex'>
@@ -101,7 +101,7 @@ class ProductManager extends Database{
                             <a href='add_to_cart.php?id=$row[id]' class='text-decoration-none text-warning'><h6>Add to cart</h6></a>
                         </div>
                         <div class='col-6'>
-                            <a href='#' class='text-decoration-none text-primary'><h6>See More>></h6></a>
+                            <a href='show_by_uscategory.php?category=$row[category]' class='text-decoration-none text-primary'><h6>See More>></h6></a>
                         </div>
                     </div>
                 </div>
@@ -127,15 +127,15 @@ class ProductManager extends Database{
                     <p class='text-white'><span class='text-warning'>Price </span>  KES $row[product_price]/=</p>
                 </div>
                 <div class='card-body bg-secondary'>
-                    <img class='img-fluid' src='$row[path2]' alt=''>
+                    <img class='img-fluid' src='$row[path2]' style='height:25rem;' alt=''>
                 </div>
                 <div class='card-footer bg-dark'>
                     <div class='row d-flex'>
                         <div class='col-6'>
-                            <a href='./pages/signin.php' class='text-decoration-none text-warning'><h6>Buy Now</h6></a>
+                            <a href='pages/signin.php' class='text-decoration-none text-warning'><h6>Buy Now</h6></a>
                         </div>
                         <div class='col-6'>
-                            <a href='#' class='text-decoration-none text-primary'><h6>See More>></h6></a>
+                            <a href='pages/show_by_incategory.php?category=$row[category]' class='text-decoration-none text-primary'><h6>See More>></h6></a>
                         </div>
                     </div>
                 </div>
@@ -161,7 +161,7 @@ class ProductManager extends Database{
                     <p class='text-white'><span class='text-warning'>Price </span>  KES $row[product_price]/=</p>
                 </div>
                 <div class='card-body bg-secondary'>
-                    <img class='img-fluid' src='$row[product_image]' alt=''>
+                    <img class='img-fluid' src='$row[product_image]' style='height:25rem;' alt=''>
                 </div>
                 <div class='card-footer bg-dark'>
                     <div class='row d-flex'>
@@ -797,6 +797,73 @@ public function searchForProductInd($serchTerm)
         $stmt=$this->Connect()->prepare($sql);
         $stmt->execute([$MerchantRequestID,$CheckoutRequestID,$ResultCode, $ResultDesc,$Amount,$TransactionId,$UserPhoneNumber]);
         header("location:../pages/users_dashboard.php");
+    }
+
+    public function seeMoreonIndex($category)
+    {
+        $sql="SELECT * FROM products WHERE category=?";
+        $stmt=$this->Connect()->prepare($sql);
+        $stmt->execute([$category]);
+        $rows=$stmt->fetchAll();
+        foreach($rows as $row){
+            echo "
+            <div class='col-lg-4 col-md-6 col-sm-12'>
+                <div class='card m-sm-2 m-xsm-2'>
+                <div class='card-header bg-dark'>
+                    <h3 class='text-white'>$row[product_name]</h3>
+                    <p class='text-white'><span class='text-warning'>Price </span>  KES $row[product_price]/=</p>
+                </div>
+                <div class='card-body bg-secondary'>
+                    <img class='img-fluid' src='$row[product_image]' style='height:25rem;' alt=''>
+                </div>
+                <div class='card-footer bg-dark'>
+                    <div class='row d-flex'>
+                        <div class='col-6'>
+                            <a href='signin.php' class='text-decoration-none text-warning'><h6>Buy now</h6></a>
+                        </div>
+                        <div class='col-6'>
+                            <a href='#' class='text-decoration-none text-primary'><h6>See More>></h6></a>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+           ";
+        }
+    }
+
+
+    public function seeMoreonIndexus($category)
+    {
+        $sql="SELECT * FROM products WHERE category=?";
+        $stmt=$this->Connect()->prepare($sql);
+        $stmt->execute([$category]);
+        $rows=$stmt->fetchAll();
+        foreach($rows as $row){
+            echo "
+            <div class='col-lg-4 col-md-6 col-sm-12'>
+                <div class='card m-sm-2 m-xsm-2'>
+                <div class='card-header bg-dark'>
+                    <h3 class='text-white'>$row[product_name]</h3>
+                    <p class='text-white'><span class='text-warning'>Price </span>  KES $row[product_price]/=</p>
+                </div>
+                <div class='card-body bg-secondary'>
+                    <img class='img-fluid' src='$row[product_image]' style='height:25rem;' alt=''>
+                </div>
+                <div class='card-footer bg-dark'>
+                    <div class='row d-flex'>
+                        <div class='col-6'>
+                            <a href='add_to_cart.php?id=$row[id]' class='text-decoration-none text-warning'><h6>Add to cart</h6></a>
+                        </div>
+                        <div class='col-6'>
+                            <a href='#' class='text-decoration-none text-primary'><h6>See More>></h6></a>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+           ";
+        }
     }
 
 }

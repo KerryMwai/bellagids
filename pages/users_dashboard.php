@@ -90,6 +90,20 @@ session_start();
       <div class="container" style="margin-top: 120px;">
         <div class="row d-flex mb-4 jsutify-content-center text-center text-white">
             <h2>Happy Shopping</h2>
+            
+                      <?php
+                          if(isset($_GET['message'])){
+                            $msg=$_GET['message'];
+                            echo "
+                            <div class='card bg-success '>
+                                <div class='card-body text-center'>
+                              <h5>$msg</h5>
+                              </div>
+                            </div>
+                            ";
+                          }
+                      ?>
+              
 
         </div>
         <div class="row mb-lg-4 mb-md-4 mb-sm-4 ">
